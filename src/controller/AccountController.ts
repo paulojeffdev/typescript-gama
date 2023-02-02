@@ -6,8 +6,8 @@ import { Account } from "../entity/Account";
 import { Client } from "../entity/Client";
 
 let accounts: Accounts = {
-    1: new Cc("01","01", new Client("Paulo", "Jefferson Mendes Oliveira", "000.000.000-00"), 1),
-    2: new Cp("02", "01", new Client("José", "Medeiros", "100.000.000-00"), 2)
+    1: new Cc("01","01", new Client("Paulo", "Jefferson Mendes Oliveira", "000.000.000-00", "paulomendes", "batatinha123"), 1),
+    2: new Cp("02", "01", new Client("José", "Medeiros", "100.000.000-00", "josemendeiros", "batatinha123"), 2)
 }
 
 export class AccountController {

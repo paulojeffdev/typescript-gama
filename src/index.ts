@@ -3,6 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import routes from './routes'
 import dotenv from 'dotenv'
+import connect from './database/connect'
 
 dotenv.config()
 const app = express()
@@ -16,6 +17,8 @@ app.use("/", routes)
 
 app.listen(process.env.PORT || 5000, () => {
     console.log('Server started')
+
+    connect()
 })
 
 export default app
