@@ -1,56 +1,56 @@
 import {Request, Response, NextFunction} from "express"
 import mongoose from "mongoose";
-import Account from "../entity/Account";
+import Client from "../entity/Client";
 
-export class AccountController {
+export class ClientController {
     static findAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        return Account.find()
-            .then((accounts) => res.status(200).json({accounts}))
+        return Client.find()
+            .then((client) => res.status(200).json({client}))
             .catch((error) => res.status(500).json({error}))
     }
 
     static findOne = async (req: Request, res: Response): Promise<Response> => {
         const id = req.params.id //ID do mongo -> ds0f6s5a10fg56as0dsa651f0as0
         
-        return Account.findById(id)
-            .populate('account')
-            .then((account) => (account ? res.status(200).json({account}) : 
-                res.status(404).json({message: 'Account not found!'})))
+        return Client.findById(id)
+            .populate('client')
+            .then((client) => (client ? res.status(200).json({client}) : 
+                res.status(404).json({message: 'Client not found!'})))
             .catch((error) => res.status(500).json({error}))
     }
 
     static create = async (req: Request, res: Response): Promise<Response> => {
-        const {clientId, account_number, agency, type} = req.body
+        const {name, last_name, email, password, cpf} = req.body
 
-        const account = new Account({
+        const client = new Client({
             _id: new mongoose.Types.ObjectId(),
-            account_number,
-            agency,
-            balance: 0.00,
-            type,
-            clientId
+            name,
+            last_name,
+            email,
+            password,
+            cpf
         })
 
-        return account
+        return client
             .save()
-            .then((account) => res.status(201).json({account}))
+            .then((client) => res.status(201).json({client}))
             .catch((error) => res.status(500).json({error}))
     }
 
     static update = async (req: Request, res: Response): Promise<Response> => {
         const id = req.params.id
 
-        return Account.findById(id)
-            .then((account) => {
-                if(account) {
-                    account.set(req.body)
+        return Client.findById(id)
+            .then((client) => {
+                if(client) {
+                    client.set(req.body)
 
-                    return account
+                    return client
                         .save()
-                        .then((account) => res.status(201).json({account}))
+                        .then((client) => res.status(201).json({client}))
                         .catch((error) => res.status(500).json({error}))
                 } else {
-                    return res.status(404).json({message: "Account not found!"})
+                    return res.status(404).json({message: "Client not found!"})
                 }
             })
             .catch((error) => res.status(500).json({error}))
@@ -59,9 +59,9 @@ export class AccountController {
     static remove = async(req: Request, res: Response): Promise<Response> => {
         const id = req.params.id
 
-        return Account.findByIdAndDelete(id)
-            .then((account) => (account ? res.status(201).json({account, message: "Deleted"}) : 
-                res.status(404).json({message: "Account not found!"})))
+        return Client.findByIdAndDelete(id)
+            .then((client) => (client ? res.status(201).json({client, message: "Deleted"}) : 
+                res.status(404).json({message: "Client not found!"})))
             .catch((error) => res.status(500).json({error}))
     }
 }

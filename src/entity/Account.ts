@@ -1,29 +1,24 @@
+import mongoose, {Document, Schema} from "mongoose"
 import { Client } from "./Client"
 
-export class Account {
-    private id: number
-    protected account_number: string
-    protected agency: string
-    private balance: number
-    protected client: Client
-
-    constructor(account_number: string, agency: string, client: Client, id: number) {
-        this.account_number = account_number
-        this.agency = agency
-        this.balance = 0.0
-        this.client = client
-        this.id = id
-    }
-
-    public getClient(): Client {
-        return this.client
-    }
-
-    public getId(): number {
-        return this.id
-    }
-
-    public setId(id: number) {
-        this.id = id
-    }
+export interface Account {
+    account_number: string
+    agency: string
+    balance: number
+    type: number
+    client: Client
 }
+
+const AccountSchema: Schema = new Schema(
+    {
+        account_number: {type: String, required: true},
+        agency: {type: String, required: true},
+        balance: {type: Number, required: true},
+        type: {type: Number, required: true},
+        client: {type: mongoose.Schema.Types.ObjectId, ref: 'Client'},
+    }, {
+        timestamps: true
+    }
+)
+
+export default mongoose.model<Account>("Account", AccountSchema)
