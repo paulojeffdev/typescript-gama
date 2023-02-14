@@ -1,26 +1,26 @@
 import {Request, Response, NextFunction} from "express"
 import mongoose from "mongoose";
-import Account from "../entity/Account";
+import {Account} from "../entity/Account";
 
 export class AccountController {
     static findAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         return Account.find()
             .then((accounts) => res.status(200).json({accounts}))
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 
-    static findOne = async (req: Request, res: Response): Promise<Response> => {
+    static findOne = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const id = req.params.id //ID do mongo -> ds0f6s5a10fg56as0dsa651f0as0
         
         return Account.findById(id)
-            .populate('account')
+            .exec()
             .then((account) => (account ? res.status(200).json({account}) : 
                 res.status(404).json({message: 'Account not found!'})))
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 
-    static create = async (req: Request, res: Response): Promise<Response> => {
-        const {clientId, account_number, agency, type} = req.body
+    static create = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const {client, account_number, agency, type} = req.body
 
         const account = new Account({
             _id: new mongoose.Types.ObjectId(),
@@ -28,16 +28,16 @@ export class AccountController {
             agency,
             balance: 0.00,
             type,
-            clientId
+            client
         })
 
         return account
             .save()
             .then((account) => res.status(201).json({account}))
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 
-    static update = async (req: Request, res: Response): Promise<Response> => {
+    static update = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const id = req.params.id
 
         return Account.findById(id)
@@ -48,20 +48,20 @@ export class AccountController {
                     return account
                         .save()
                         .then((account) => res.status(201).json({account}))
-                        .catch((error) => res.status(500).json({error}))
+                        .catch((error) => res.status(500).json({error: error.message}))
                 } else {
                     return res.status(404).json({message: "Account not found!"})
                 }
             })
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 
-    static remove = async(req: Request, res: Response): Promise<Response> => {
+    static remove = async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const id = req.params.id
 
         return Account.findByIdAndDelete(id)
             .then((account) => (account ? res.status(201).json({account, message: "Deleted"}) : 
                 res.status(404).json({message: "Account not found!"})))
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 }

@@ -8,7 +8,7 @@ router.get("/", [checkJwt], ClientController.findAll)
 
 router.get("/:id", [checkJwt], ClientController.findOne)
 
-router.post("/", [checkJwt], ClientController.create)
+router.post("/", ClientController.create)
 
 router.put("/:id", [checkJwt], ClientController.update)
 

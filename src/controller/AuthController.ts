@@ -1,11 +1,8 @@
 import {Request, Response} from "express"
-import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
-import {validate} from "class-validator"
 import config from "../config/config"
 
-import Client from "../entity/Client"
-import { AccountController } from "./AccountController"
+import {Client} from "../entity/Client"
 
 
 export class AuthController {
@@ -30,7 +27,7 @@ export class AuthController {
                     return res.status(401).json({message: "Password or user not found"})
                 }
             })
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 
     static changePassword = async (req: Request, res: Response) => {
@@ -49,11 +46,11 @@ export class AuthController {
                     return client
                         .save()
                         .then((client) => res.status(201).json({message: "Password changed"}))
-                        .catch((error) => res.status(500).json({error}))
+                        .catch((error) => res.status(500).json({error: error.message}))
                 } else {
                     return res.status(404).json({message: "Client not found"})
                 }
             })
-            .catch((error) => res.status(500).json({error}))
+            .catch((error) => res.status(500).json({error: error.message}))
     }
 }

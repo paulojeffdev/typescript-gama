@@ -1,12 +1,11 @@
-import mongoose, {Document, Schema} from "mongoose"
-import { Client } from "./Client"
+import mongoose, {Model, model, Document, Schema} from "mongoose"
 
-export interface Account {
+export interface I_Account extends Document {
     account_number: string
     agency: string
     balance: number
     type: number
-    client: Client
+    client: string
 }
 
 const AccountSchema: Schema = new Schema(
@@ -15,10 +14,10 @@ const AccountSchema: Schema = new Schema(
         agency: {type: String, required: true},
         balance: {type: Number, required: true},
         type: {type: Number, required: true},
-        client: {type: mongoose.Schema.Types.ObjectId, ref: 'Client'},
+        client: {type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true},
     }, {
         timestamps: true
     }
 )
 
-export default mongoose.model<Account>("Account", AccountSchema)
+export const Account:Model<I_Account> = model("Account", AccountSchema)

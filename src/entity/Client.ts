@@ -1,7 +1,7 @@
-import mongoose from "mongoose"
+import {Model, model, Schema, Document} from "mongoose"
 import bcrypt from "bcrypt"
 
-export interface Client extends mongoose.Document {
+export interface I_Client extends Document {
     name: string
     lastName: string
     email: string
@@ -10,7 +10,7 @@ export interface Client extends mongoose.Document {
     comparePassword(passwordCompare: string) : Promise<Boolean>
 }
 
-const ClientSchema: mongoose.Schema<Client> = new mongoose.Schema(
+const ClientSchema: Schema = new Schema(
     {
         email: {type: String, required: true, unique: true},
         name: {type: String, required: true},
@@ -20,28 +20,22 @@ const ClientSchema: mongoose.Schema<Client> = new mongoose.Schema(
     {timestamps: true}
 );
 
-ClientSchema.pre("save", async (next) => {
-    let client = this as unknown as Client
+ClientSchema.pre<I_Client>("save", async function (next) {
+    if(!this.isModified("password")) return next()
 
-    if(!client.isModified("password")) return next()
+    const salt = bcrypt.genSalt(10)
 
-    const salt = await bcrypt.genSalt(10)
+    const hash = bcrypt.hashSync(this.password, await salt)
 
-    const hash = await bcrypt.hashSync(client.password, salt)
-
-    client.password = hash
+    this.password = hash
 
     return next()
 })
 
-ClientSchema.methods.comparePassword = async (passwordCompare : string) => {
-    const client = this as unknown as Client
-
+ClientSchema.methods.comparePassword = async function (passwordCompare : string) {
     //passwordCompare = 123456 -> mdklshfçjashihh49489
     //client.password = mdklshfçjashihh49489
-    return bcrypt.compare(passwordCompare, client.password).catch((e) => false)
+    return bcrypt.compare(passwordCompare, this.password).catch((e) => false)
 }
 
-const Client = mongoose.model<Client>("Client", ClientSchema)
-
-export default Client
+export const Client:Model<I_Client> = model("Client", ClientSchema)
