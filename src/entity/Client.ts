@@ -38,4 +38,4 @@ ClientSchema.methods.comparePassword = async function (passwordCompare : string)
     return bcrypt.compare(passwordCompare, this.password).catch((e) => false)
 }
 
-export const Client:Model<I_Client> = model("Client", ClientSchema)
+export const Client:any = model("Client", ClientSchema)

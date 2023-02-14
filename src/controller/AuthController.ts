@@ -14,7 +14,7 @@ export class AuthController {
         }
 
         Client.findOne({email: email})
-            .then((client) => {
+            .then((client: { comparePassword: (arg0: any) => any; _id: any; name: any; lastName: any }) => {
                 if(client?.comparePassword(password)) {
                     const token = jwt.sign(
                         {clientId: client._id, full_name: client.name + client.lastName},
@@ -27,7 +27,7 @@ export class AuthController {
                     return res.status(401).json({message: "Password or user not found"})
                 }
             })
-            .catch((error) => res.status(500).json({error: error.message}))
+            .catch((error: { message: any }) => res.status(500).json({error: error.message}))
     }
 
     static changePassword = async (req: Request, res: Response) => {
@@ -39,18 +39,18 @@ export class AuthController {
         }
 
         Client.findById(id)
-            .then((client) => {
+            .then((client: { comparePassword: (arg0: any) => any; set: (arg0: string, arg1: any) => void; save: () => Promise<any> }) => {
                 if(client?.comparePassword(oldPassword)) {
                     client.set('password', newPassword)
 
                     return client
                         .save()
-                        .then((client) => res.status(201).json({message: "Password changed"}))
-                        .catch((error) => res.status(500).json({error: error.message}))
+                        .then((client: any) => res.status(201).json({message: "Password changed"}))
+                        .catch((error: { message: any }) => res.status(500).json({error: error.message}))
                 } else {
                     return res.status(404).json({message: "Client not found"})
                 }
             })
-            .catch((error) => res.status(500).json({error: error.message}))
+            .catch((error: { message: any }) => res.status(500).json({error: error.message}))
     }
 }

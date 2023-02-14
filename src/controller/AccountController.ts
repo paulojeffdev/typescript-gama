@@ -5,8 +5,8 @@ import {Account} from "../entity/Account";
 export class AccountController {
     static findAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         return Account.find()
-            .then((accounts) => res.status(200).json({accounts}))
-            .catch((error) => res.status(500).json({error: error.message}))
+            .then((accounts: any) => res.status(200).json({accounts}))
+            .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
     }
 
     static findOne = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -14,9 +14,9 @@ export class AccountController {
         
         return Account.findById(id)
             .exec()
-            .then((account) => (account ? res.status(200).json({account}) : 
+            .then((account: any) => (account ? res.status(200).json({account}) : 
                 res.status(404).json({message: 'Account not found!'})))
-            .catch((error) => res.status(500).json({error: error.message}))
+            .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
     }
 
     static create = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -33,35 +33,35 @@ export class AccountController {
 
         return account
             .save()
-            .then((account) => res.status(201).json({account}))
-            .catch((error) => res.status(500).json({error: error.message}))
+            .then((account: any) => res.status(201).json({account}))
+            .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
     }
 
     static update = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const id = req.params.id
 
         return Account.findById(id)
-            .then((account) => {
+            .then((account: { set: (arg0: any) => void; save: () => Promise<any>; }) => {
                 if(account) {
                     account.set(req.body)
 
                     return account
                         .save()
-                        .then((account) => res.status(201).json({account}))
-                        .catch((error) => res.status(500).json({error: error.message}))
+                        .then((account: any) => res.status(201).json({account}))
+                        .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
                 } else {
                     return res.status(404).json({message: "Account not found!"})
                 }
             })
-            .catch((error) => res.status(500).json({error: error.message}))
+            .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
     }
 
     static remove = async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const id = req.params.id
 
         return Account.findByIdAndDelete(id)
-            .then((account) => (account ? res.status(201).json({account, message: "Deleted"}) : 
+            .then((account: any) => (account ? res.status(201).json({account, message: "Deleted"}) : 
                 res.status(404).json({message: "Account not found!"})))
-            .catch((error) => res.status(500).json({error: error.message}))
+            .catch((error: { message: any; }) => res.status(500).json({error: error.message}))
     }
 }

@@ -20,4 +20,4 @@ const AccountSchema: Schema = new Schema(
     }
 )
 
-export const Account:Model<I_Account> = model("Account", AccountSchema)
+export const Account:any = model("Account", AccountSchema)
