@@ -1,10 +1,13 @@
 import mongoose from "mongoose"
 import config from "./config"
+import dotenv from "dotenv"
 
 import {Logger} from "../logger/index"
 
+dotenv.config()
+
 const connect = () => {
-    const dbUri = config.uri as string
+    const dbUri = process.env.MONGO_URL as string
     const log: Logger = new Logger()
 
     mongoose.set("strictQuery", false);
